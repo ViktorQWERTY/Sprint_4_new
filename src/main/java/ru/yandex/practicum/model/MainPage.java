@@ -1,6 +1,8 @@
 package ru.yandex.practicum.model;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -71,5 +73,10 @@ public class MainPage {
     public void clickAcceptCookie(){
         new WebDriverWait(driver, 3)
                 .until(ExpectedConditions.elementToBeClickable(acceptCookieButton)).click();
+    }
+    //Скролл до блока с FAQ
+    public void scrollToTheFAQ(){
+        WebElement element = driver.findElement(itemQuestionsBlock);
+        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", element);
     }
 }

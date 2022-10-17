@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,10 +13,14 @@ import ru.yandex.practicum.model.FirstStepOrderPage;
 import ru.yandex.practicum.model.MainPage;
 import ru.yandex.practicum.model.SecondStepOrderPage;
 
+import static ru.yandex.practicum.model.MainPage.DOWN_ORDER_BUTTON;
+import static ru.yandex.practicum.model.MainPage.UPPER_ORDER_BUTTON;
+
 
 @RunWith(Parameterized.class)
 public class OrderScooterTest {
 
+    private static By orderButton;
     private static String firstName;
     private static String secondName;
     private static String address;
@@ -28,7 +33,8 @@ public class OrderScooterTest {
 
     private WebDriver driver;
 
-    public OrderScooterTest(String firstName, String secondName, String address, String metroStation, String phone, String rentDay, String rentDuration, String color, String comment){
+    public OrderScooterTest(By orderButton, String firstName, String secondName, String address, String metroStation, String phone, String rentDay, String rentDuration, String color, String comment){
+        this.orderButton = orderButton;
         this.firstName = firstName;
         this.secondName = secondName;
         this.address = address;
@@ -44,8 +50,10 @@ public class OrderScooterTest {
     @Parameterized.Parameters
     public static Object [][] testData(){
         return new Object[][]{
-                {"Вениамин", "Самокатов", "Москва, пр-кт Мира, дом 45", "Комсомольская", "+79879879879", "15.10.2022", "двое суток", "чёрный жемчуг", "Комментирую"},
-                {"Самокат", "Вениаминов", "Москва, пр-кт Мира, дом 54", "Сокольники", "+79899898989", "16.10.2022", "сутки", "серая безысходность", "Опять комментирую"}
+                {UPPER_ORDER_BUTTON, "Вениамин", "Самокатов", "Москва, пр-кт Мира, дом 45", "Комсомольская", "+79879879879", "15.10.2022", "двое суток", "чёрный жемчуг", "Комментирую"},
+                {DOWN_ORDER_BUTTON, "Вениамин", "Самокатов", "Москва, пр-кт Мира, дом 45", "Комсомольская", "+79879879879", "15.10.2022", "двое суток", "чёрный жемчуг", "Комментирую"},
+                {UPPER_ORDER_BUTTON, "Самокат", "Вениаминов", "Москва, пр-кт Мира, дом 54", "Сокольники", "+79899898989", "16.10.2022", "сутки", "серая безысходность", "Опять комментирую"},
+                {DOWN_ORDER_BUTTON, "Самокат", "Вениаминов", "Москва, пр-кт Мира, дом 54", "Сокольники", "+79899898989", "16.10.2022", "сутки", "серая безысходность", "Опять комментирую"}
         };
     }
 
@@ -58,36 +66,11 @@ public class OrderScooterTest {
     }
 
     @Test
-    public void UpperButton(){
+    public void orderButton(){
         MainPage mainPage = new MainPage(driver);
-        mainPage.startOrderButton(mainPage.UPPER_ORDER_BUTTON);
-        FirstStepOrderPage firstStepOrderPage = new FirstStepOrderPage(driver);
         mainPage.clickAcceptCookie();
-        firstStepOrderPage.enterFirstName(firstName);
-        firstStepOrderPage.enterSecondName(secondName);
-        firstStepOrderPage.enterAddress(address);
-        firstStepOrderPage.enterMetroStation(metroStation);
-        firstStepOrderPage.enterPhone(phone);
-        firstStepOrderPage.moveToNextSteps();
-
-        SecondStepOrderPage secondStepOrderPage = new SecondStepOrderPage(driver);
-        secondStepOrderPage.chooseRentDay(rentDay);
-        secondStepOrderPage.chooseRentDuration(rentDuration);
-        secondStepOrderPage.chooseColor(color);
-        secondStepOrderPage.writeComment(comment);
-        secondStepOrderPage.clickOrder();
-        secondStepOrderPage.confirmOrder();
-        secondStepOrderPage.successfulRegistrationMessage();
-    }
-
-    @Test
-    public void DownButton(){
-        MainPage mainPage = new MainPage(driver);
-        WebElement element = driver.findElement(mainPage.DOWN_ORDER_BUTTON);
-        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", element);
-        mainPage.startOrderButton(mainPage.DOWN_ORDER_BUTTON);
+        mainPage.startOrderButton(orderButton);
         FirstStepOrderPage firstStepOrderPage = new FirstStepOrderPage(driver);
-        mainPage.clickAcceptCookie();
         firstStepOrderPage.enterFirstName(firstName);
         firstStepOrderPage.enterSecondName(secondName);
         firstStepOrderPage.enterAddress(address);
